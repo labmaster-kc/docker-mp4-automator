@@ -1,14 +1,15 @@
-FROM python:2.7-stretch
-
+FROM python:3.7-buster
 RUN mkdir /data
+RUN mkdir /app
 
 # install ffmpeg
-RUN apt-get update -qq && apt-get install python-pip ffmpeg -y -qq
+RUN apt-get update -qq && \
+    apt-get install ffmpeg -y -qq
 
-RUN pip install requests requests[security] requests-cache babelfish "guessit<2" stevedore==1.19.1 python-dateutil qtfaststart tmdbsimple
-RUN git clone https://github.com/mdhiggins/sickbeard_mp4_automator /app
+# install sma
+RUN git clone https://github.com/mdhiggins/sickbeard_mp4_automator.git /app
 WORKDIR /app
-# Copy local config file
+RUN pip install -r setup/requirements.txt
 COPY autoProcess.ini .
 
-ENTRYPOINT ["/app/manual.py", "-i", "/data/", "-a"]
+ENTRYPOINT ["python3", "/app/manual.py", "-i", "/data/", "-a"]
