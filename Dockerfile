@@ -1,15 +1,16 @@
-FROM python:3.7-buster
+FROM python:3
+
 RUN mkdir /data
-RUN mkdir /app
 
 # install ffmpeg
-RUN apt-get update -qq && \
-    apt-get install ffmpeg -y -qq
+RUN apt-get update -qq && apt-get install python-pip ffmpeg -y -qq
 
-# install sma
-RUN git clone https://github.com/mdhiggins/sickbeard_mp4_automator.git /app
+RUN git clone https://github.com/mdhiggins/sickbeard_mp4_automator /app
+# Install pip modules from sickbeard_mp4_automator
+RUN pip install --no-cache-dir -r /app/setup/requirements.txt
+
 WORKDIR /app
-RUN pip install -r setup/requirements.txt
+# Copy local config file
 COPY autoProcess.ini .
 
-ENTRYPOINT ["python3", "/app/manual.py", "-i", "/data/", "-a"]
+ENTRYPOINT ["/app/manual.py", "-i", "/data/", "-a"]
