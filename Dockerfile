@@ -1,6 +1,7 @@
 FROM python:3
 
-RUN mkdir /data
+#RUN mkdir /data
+#access a data dir mounted as a volume (needs to be mounted in the compose file)
 
 # install ffmpeg
 RUN apt-get update -qq && apt-get install python-pip ffmpeg -y -qq
